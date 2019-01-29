@@ -8,37 +8,6 @@ from sign_up import Sign_up
 import useCasesAPI
 import tester
 
-#вот в таком виде пока нет базы данных словарь с problem
-dict_problems = {
-    "problem_id": {
-        "Name": "problem1", 
-        "Text": "Lorem ipsum...\nlalala\n891829", 
-        "Username": {
-            "Submissions": {
-                "id_of_submission": {
-                    "Text": "code text", 
-                    "Status": "0"}, 
-                "1": {
-                    "Text": "print(2)",
-                    "Status": "1"}
-            }
-        }
-    },
-    "0001": {
-        "Name": "problem2", 
-        "Text": "Lorem ipsum dolor...", 
-        "Username": {
-            "Submissions": {
-                "0": {
-                    "Text": "print(lalala)", 
-                    "Status": "1"}, 
-            }
-        }
-    }
-}
-
-list_name_problems = [problem for problem in dict_problems]
-
 def info() -> list:
     logged_in = request.cookies.get("logged_in")
     username = request.cookies.get("username")
@@ -90,27 +59,9 @@ def problemset_id(strId):
 def settings():
     return render_template('settings.html', title = "Settings", info = info())
 
-@app.route("/strategy_tester", methods = ["GET", "POST"])
-def strategy_tester():
-    form = StrategyTester()
-    if form.validate_on_submit():
-        id1 = form.id1.data
-        id2 = form.id2.data
-        return redirect('/test?id1=' + str(id1) + '&id2=' + str(id2))
-    return render_template('strategy_tester.html', title = "Strategy Tester", form = form, info = info())
-
 @app.route("/login", methods = ["GET", "POST"])
 def login():
     form = LoginForm()
-#    if form.validate_on_submit():
-#        username = form.username.data
-#        password = form.password.data
-#        if storage.storage.getUserByName(username).password == password:
-#            resp = make_response(redirect('/home'))
-#            resp.set_cookie("logged_in", '1')
-#            resp.set_cookie("username", username)
-#            return resp
-#        flash("Failed to log in")
     success, message, username = Login(form)
     flash(message)
     if success:
@@ -130,23 +81,6 @@ def logout():
 @app.route("/sign_up", methods = ["GET", "POST"])
 def sign_up():
     form = SignUp()
-#    if form.validate_on_submit():
-#        name = form.name.data
-#        secondname = form.secondname.data
-#        username = form.username.data
-#        password = form.password.data
-#        passwordRet = form.passwordRet.data
-#        if storage.storage.getUserByName(username) == None and password == passwordRet:
-#            user = structures.User(storage.storage.getUsersCount(), username, password, [])
-#            storage.storage.saveUser(user)
-#        remember_me = form.remember_me.data
-#            return redirect('/home')
-#        if storage.storage.getUserByName(username) != None:
-#            flash("There is a user with this username")
-#            print("username")
-#        else:
-#            flash("Passwords don't match")
-#            print("password")
     success, message = Sign_up(form)
     flash(message)
     if success:
@@ -166,14 +100,6 @@ def showTestPage():
 @app.route("/source/<subId>")
 def showSource(subId):
     return render_template('source.html.j2', id = subId, code = useCasesAPI.getSubmissionCode(subId), info = info())
-
-    """TODO return!!!!"""
-
-"""#??? and other like /problem/"id_problem"/statement, submit, submissions
-t = 9083927398
-@app.route("/problem/" + t + "/statement")#???
-def statement():
-    return None"""
 
 @app.route("/submissions")
 def submissions():
