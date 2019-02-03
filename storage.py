@@ -89,4 +89,3 @@ class Storage:
 		return structures.getSubmissionListUP(self.cursor, userId, probId)
 
 storage = Storage()
-

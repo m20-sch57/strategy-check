@@ -1,6 +1,6 @@
 from flask import render_template, flash, redirect, make_response, request, send_file
 from app import app
-from app.forms import LoginForm, SignUp, Submit, StrategyTester, ProblemsetID
+from app.forms import LoginForm, SignUp, ProblemsetID
 import structures
 from storage import storage
 from login import Login
@@ -66,15 +66,6 @@ def download(d1, d2, filename):
 def settings():
     return render_template('settings.html', title = "Settings", info = info())
 
-@app.route("/strategy_tester", methods = ["GET", "POST"])
-def strategy_tester():
-    form = StrategyTester()
-    if form.validate_on_submit():
-        id1 = form.id1.data
-        id2 = form.id2.data
-        return redirect('/test?id1=' + str(id1) + '&id2=' + str(id2))
-    return render_template('strategy_tester.html', title = "Strategy Tester", form = form, info = info())
-
 @app.route("/login", methods = ["GET", "POST"])
 def login():
     form = LoginForm()
@@ -103,27 +94,10 @@ def sign_up():
         return redirect("home")
     return render_template('sign_up.html', title = "Sign Up", form = form, info = info())
 
-@app.route("/test")
-def showTestPage():
-    id1 = request.args.get('id1')
-    id2 = request.args.get('id2')
-    if (id1 == None or id2 == None):
-        return "..."
-
-    invocationResult = demoAPI.judge(id1, id2)
-    return invocationResult.logs.show()
-
 @app.route("/source/<subId>")
 def showSource(subId):
-    return render_template('source.html.j2', id = subId, code = useCasesAPI.getSubmissionCode(subId), info = info())
-
-    """TODO return!!!!"""
-
-"""#??? and other like /problem/"id_problem"/statement, submit, submissions
-t = 9083927398
-@app.route("/problem/" + t + "/statement")#???
-def statement():
-    return None"""
+    title = "Code #" + subId
+    return render_template('source.html.j2', title = title, id = subId, code = useCasesAPI.getSubmissionCode(subId), info = info())
 
 @app.route("/submissions")
 def submissions():
@@ -134,15 +108,6 @@ def submissions():
     
     lst = useCasesAPI.getSubmissionsU(user.id)
     return render_template('submissions.html', title = "Submissions", info = info(), subList = lst)
-
-@app.route("/submit", methods = ["GET", "POST"])
-def submit():
-    form = Submit()
-    if form.validate_on_submit():
-        text_code = form.textfield.data
-        demoAPI.addStrategy(text_code)
-        return redirect('/home')
-    return render_template('submit.html', title = "Send your code", form = form, info = info())
 
 #__________________________________
 #for admin
@@ -176,4 +141,3 @@ def edit_user():
 """@app.route("/edit_problem/id_problem")
 def edit_problem():
     return None"""
-

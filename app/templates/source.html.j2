@@ -1,8 +1,7 @@
-<html>
-<head>
-	<title>Code #{{ id }}</title>
-</head>
-<body>
-	<code><pre>{{ code }}</pre></code>
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block content %}
+    <body>
+    <code><pre>{{ code }}</pre></code>
+    </body>
+{% endblock %}
