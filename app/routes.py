@@ -56,7 +56,7 @@ def problemset_id(strId):
     return render_template('problem.html.j2', form = form, title = problem.rules.name, problem = problem,
         subList = subList, info = info(), paths = paths)
 
-@app.route("/download/<d1>/<d2>/<filename>")
+@app.route("/download/app/<d1>/<d2>/<filename>")
 def download(d1, d2, filename):
     #TODO if no file redirect home
     path = d1 + "/" + d2 + "/" + filename
