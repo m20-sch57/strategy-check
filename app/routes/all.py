@@ -31,7 +31,7 @@ def showSource(subId):
     title = "Code #" + subId
     return render_template('source.html.j2', id = subId, code = useCasesAPI.getSubmissionCode(subId), info = info())
 
-@app.route("/download/<d1>/<d2>/<filename>")
+@app.route("/download/app/<d1>/<d2>/<filename>")
 def download(d1, d2, filename):
     #TODO if no file redirect home
     path = d1 + "/" + d2 + "/" + filename
