@@ -124,8 +124,15 @@ server/key.pub
 
 app/downloads
 
-#packed problem archive
+# packed problem archive
 
 tic_tac_toe.zip
 trust_evolution.zip
 FourInRow.zip
+
+
+# log files
+strategy-trial.log
+
+# file with id of process
+pid

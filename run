@@ -1,1 +1,2 @@
-python3 strategy_html_pages.py
+python3 -u strategy_html_pages.py &> strategy-trial.log &
+echo `ps -ax | grep "python3 -u strategy_html_pages.py"` > pid
