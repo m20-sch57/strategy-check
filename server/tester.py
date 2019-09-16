@@ -9,13 +9,17 @@ import sys
 
 #TODO: same name of modules
 
-def loadSources(sources):
+def loadSources(sources, problems=False):
     for source in sources:
         path = source[0]
         printToFile(source[1], path)
+        if (problems):
+            pathParts = path.split('/')
+            if (pathParts[0] == "problems" and pathParts[2] == "classes.py"): #TODO better
+                printToFile(source[1], "/home/test/" + path) #TODO better
 
 def loadProblem(problem):
-    loadSources(problem.rules.sources)
+    loadSources(problem.rules.sources, True)
 
 def loadProblemDownloads(problem):
     loadSources(problem.rules.downloads)
@@ -31,13 +35,17 @@ def getFilename(submission):
     return getName(submission) + ".py"
 
 def loadSubmission(submission, problem):
-    filename = os.path.join('problems', problemFolder(problem.id),
-        'strategies', getFilename(submission))
-    print(filename)
-    printToFile(submission.code, filename)
+    for prefix in [["."], ["/home", "test"]]: #TODO "test" -> username, '/' -> os.sep
+        filename = os.path.join(*prefix, 'problems', problemFolder(problem.id),
+            'strategies', getFilename(submission))
+        print(filename)
+        printToFile(submission.code, filename)
 
 def getGameModule(problem):
     return '.'.join(['problems', problemFolder(problem.id), 'game'])
+
+def getClassesModule(problem):
+    return '.'.join(["problems", problemFolder(problem.id), "classes"])
 
 def testStrategies(id1, id2, saveLogs = False):
     sub1 = storage.getSubmission(id1)
@@ -55,6 +63,7 @@ def testStrategies(id1, id2, saveLogs = False):
 
     invocationResult = judge.run(
         getGameModule(problem),
+        getClassesModule(problem),
         [getStrategyModule(sub1), getStrategyModule(sub2)],
         saveLogs = saveLogs
     )
@@ -81,6 +90,7 @@ def tournament(problemId):
                 print("judging ", i, j)
                 invocationResult = judge.run(
                     getGameModule(problem),
+                    getClassesModule(problem),
                     [getStrategyModule(subs[i]), getStrategyModule(subs[j])],
                     saveLogs = False
                 )
